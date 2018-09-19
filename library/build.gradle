@@ -1,21 +1,20 @@
 apply plugin: 'com.android.library'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
-apply from: 'maven-push.gradle'
+apply plugin: 'maven-publish'
+
+group = "com.subkhansarif.libs"
+def versi = "1.0.8"
+version = versi
 
 android {
     compileSdkVersion 28
-
-
-
     defaultConfig {
         minSdkVersion 21
         targetSdkVersion 28
         versionCode 1
         versionName "1.0"
-
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
-
     }
 
     buildTypes {
@@ -24,22 +23,105 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
-
 }
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
-
     implementation 'com.android.support:appcompat-v7:28.0.0-rc02'
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'com.android.support.test:runner:1.0.2'
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
-    compile "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
 
     // Lottie
     implementation "com.airbnb.android:lottie:2.5.5"
 
 }
+
 repositories {
     mavenCentral()
 }
+
+// Create the pom configuration:
+def pomConfig = {
+    licenses {
+        license {
+            name "The Apache Software License, Version 2.0"
+            url "http://www.apache.org/licenses/LICENSE-2.0.txt"
+            distribution "repo"
+        }
+    }
+    developers {
+        developer {
+            id "subsubd"
+            name "Subkhan Sarif"
+            email "subkhansarif@gmail.com"
+        }
+    }
+
+    scm {
+        url "https://github.com/subsub/lottiebottomnavbar"
+    }
+}
+
+bintray {
+    user = System.getenv('BINTRAY_USER')
+    key = System.getenv('BINTRAY_API_KEY')
+    publications = ['bottomNavbar']
+    pkg {
+        repo = 'maven'
+        name = "bottomnavbarlib"
+        userOrg = user
+        licenses = ['Apache-2.0']
+        vcsUrl = 'https://github.com/subsub/lottiebottomnavbar.git'
+        version {
+            name = versi
+            desc = "A customisable bottom navbar with Lottie (c) capability"
+            released = new Date()
+            vcsTag = versi
+        }
+    }
+}
+
+task sourceJar(type: Jar) {
+    from android.sourceSets.main.java.srcDirs
+    classifier "sources"
+}
+
+publishing {
+    publications {
+        bottomNavbar(MavenPublication) {
+            artifact sourceJar
+            artifact "$buildDir/outputs/aar/library-release.aar"
+            groupId group
+            artifactId "bottomnavbarlib"
+            version versi
+
+            pom.withXml {
+                def root = asNode()
+                root.appendNode('description', 'A customisable bottom navbar with Lottie (c) capability')
+                root.appendNode('name', 'Lottie Button Navigation Bar')
+                root.appendNode('url', 'https://github.com/subsub/lottiebottomnavbar')
+                root.children().last() + pomConfig
+
+                def dependenciesNode = asNode().appendNode('dependencies')
+                // Iterate over the implementation dependencies (we don't want the test ones), adding a <dependency> node for each
+                configurations.implementation.allDependencies.each {
+                    // Ensure dependencies such as fileTree are not included.
+                    if (it.name != 'unspecified') {
+                        def dependencyNode = dependenciesNode.appendNode('dependency')
+                        dependencyNode.appendNode('groupId', it.group)
+                        dependencyNode.appendNode('artifactId', it.name)
+                        dependencyNode.appendNode('version', it.version)
+                    }
+                }
+            }
+        }
+    }
+}
+
+task customClean(type: Delete) {
+    delete rootProject.buildDir
+}
+
+clean.dependsOn customClean

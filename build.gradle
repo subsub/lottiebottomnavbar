@@ -11,6 +11,7 @@ buildscript {
     dependencies {
         classpath 'com.android.tools.build:gradle:3.1.4'
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
+        classpath 'com.jfrog.bintray.gradle:gradle-bintray-plugin:1.+'
 
         // NOTE: Do not place your application dependencies here; they belong
         // in the individual module build.gradle files
@@ -23,8 +24,63 @@ allprojects {
         google()
         jcenter()
     }
+
+    apply plugin: 'com.jfrog.bintray'
+    apply plugin: 'maven-publish'
+}
+apply plugin: 'maven-publish'
+apply plugin: 'com.jfrog.bintray'
+apply plugin: 'java-library'
+
+group = "com.subkhansarif.libs"
+def versi = "1.0.8"
+version = versi
+
+bintray {
+    user = System.getenv('BINTRAY_USER')
+    key = System.getenv('BINTRAY_API_KEY')
+    publications = ['bottomNavbar']
+    pkg {
+        repo = 'maven'
+        name = "bottomnavbar"
+        userOrg = user
+        licenses = ['Apache-2.0']
+        vcsUrl = 'https://github.com/subsub/lottiebottomnavbar.git'
+        version {
+            name = versi
+            desc = "A customisable bottom navbar with Lottie (c) capability"
+            released = new Date()
+            vcsTag = versi
+        }
+    }
 }
 
-task clean(type: Delete) {
+
+publishing {
+    publications {
+        bottomNavbar(MavenPublication) {
+            groupId group
+            artifactId "bottomnavbar"
+            version versi
+
+            pom.withXml {
+                // Iterate over the compile dependencies (we don't want the test ones), adding a <dependency> node for each
+                configurations.implementation.allDependencies.each {
+                    // Ensure dependencies such as fileTree are not included.
+                    if (it.name != 'unspecified') {
+                        def dependencyNode = dependenciesNode.appendNode('dependency')
+                        dependencyNode.appendNode('groupId', it.group)
+                        dependencyNode.appendNode('artifactId', it.name)
+                        dependencyNode.appendNode('version', it.version)
+                    }
+                }
+            }
+        }
+    }
+}
+
+task customClean(type: Delete) {
     delete rootProject.buildDir
 }
+
+clean.dependsOn customClean
