@@ -43,7 +43,7 @@ implementation "com.subkhansarif.libs:bottomnavbarlib:{latestVersion}"
 
 See sample project.
 
-## Add LottieBottomNavbar to your layout
+### Add LottieBottomNavbar to your layout
 ```xml
 <com.subkhansarif.bottomnavbar.LottieBottomNavbar
         android:id="@+id/bottom_navbar"
@@ -56,7 +56,7 @@ See sample project.
         app:layout_constraintStart_toStartOf="parent" />
 ```
 
-## Setup menus for navbar
+### Setup menus for navbar
 ```java
 ArrayList<BottomMenu> menu = ArrayList();
 menu.add(new BottomMenu(0L, getString(R.string.lbl_menu_profile), R.drawable.ic_person_grey, "a_cup_of_coffee.json"));
@@ -69,7 +69,7 @@ BottomMenu constructor parameters:
 - icon: drawable res, image resource for this button
 - (optional) lottie_animation: String, a String of json file name for Lottie Animation.
 
-## Add menus to navbar
+### Add menus to navbar
 ```java
 LottieBottomNavbar bottom_navbar = findViewById(R.id.bottom_navbar)
 bottom_navbar.setSelected(1)
