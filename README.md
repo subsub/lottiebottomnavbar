@@ -64,10 +64,10 @@ menu.add(new BottomMenu(1L, getString(R.string.lbl_menu_pet), R.drawable.ic_pets
 menu.add(new BottomMenu(2L, getString(R.string.lbl_menu_Food), R.drawable.ic_restaurant_menu_grey, null));
 ```
 BottomMenu constructor parameters:
-- id: Long, id for your button
-- label: String, label for this button. This will be shown below button icon
-- icon: drawable res, image resource for this button
-- (optional) lottie_animation: String, a String of json file name for Lottie Animation.
+- `id: Long`, id for your button
+- `label: String`, label for this button. This will be shown below button icon
+- `icon: drawable res`, image resource for this button
+- `(optional) lottie_animation: String`, a String of json file name for Lottie Animation.
 
 ### Add menus to navbar
 ```java
