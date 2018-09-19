@@ -7,7 +7,7 @@ A customisable bottom navigation bar with Lottie Animation
 
 # Usage
 
-## Add maven url Inside **Project Level build.gradle**
+### Add maven url Inside **Project Level build.gradle**
 ```bash
 buildscript {
 	...
@@ -34,7 +34,7 @@ allprojects {
 }
 ```
 
-## Add dependency into your app build.gradle
+### Add dependency into your app build.gradle
 ```bash
 implementation "com.subkhansarif.libs:bottomnavbarlib:{latestVersion}"
 ```
