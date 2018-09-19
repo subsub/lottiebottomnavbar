@@ -1,9 +1,8 @@
-# lottiebottomnavbar
+# Lottie Bottom Navbar
 
 A customisable bottom navigation bar with Lottie Animation
 
-
-# Current Latest Version `1.0.8`
+## Current Latest Version `1.0.8`
 
 
 # Usage
