@@ -47,13 +47,17 @@ See sample project.
 ```xml
 <com.subkhansarif.bottomnavbar.LottieBottomNavbar
         android:id="@+id/bottom_navbar"
-        android:layout_width="0dp"
-        android:layout_height="56dp"
-        android:background="@color/colorWhite"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
         android:elevation="15dp"
+        android:orientation="vertical"
+        app:buttonsHeight="56dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:offscreenPageLimit="4"
+        app:viewPagerBackground="@color/colorWhite" />
 ```
 
 ### Setup menus for navbar
