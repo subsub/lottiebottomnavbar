@@ -51,12 +51,16 @@ See sample project.
         android:layout_height="match_parent"
         android:elevation="15dp"
         android:orientation="vertical"
+        app:activeButtonColor="@color/colorWhite"
+        app:buttonColor="@color/colorAccent"
+        app:buttonContainerBackgroundColor="@color/colorWhite"
         app:buttonsHeight="56dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:offscreenPageLimit="4"
+        app:setViewPagerSwipeable="false"
         app:viewPagerBackground="@color/colorWhite" />
 ```
 
