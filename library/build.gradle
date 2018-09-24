@@ -4,10 +4,26 @@ apply plugin: 'kotlin-android-extensions'
 apply plugin: 'maven-publish'
 
 group = "com.subkhansarif.libs"
-def versi = "1.0.8"
+def versi = "1.1.2"
 version = versi
 
 android {
+    signingConfigs {
+        release {
+            keyAlias System.getenv("SIGNING_KEY_ALIAS")
+            keyPassword System.getenv("SIGNING_KEY_PASSWORD")
+            storeFile file(String.valueOf(System.getenv("SIGNING_KEYSTORE")))
+            storePassword System.getenv("SIGNING_STORE_PASSWORD")
+        }
+
+        debug {
+            keyAlias "android"
+            keyPassword "android"
+            storeFile file("~/.android/debug.keystore")
+            storePassword "android"
+        }
+    }
+
     compileSdkVersion 28
     defaultConfig {
         minSdkVersion 21
@@ -93,6 +109,7 @@ publishing {
         bottomNavbar(MavenPublication) {
             artifact sourceJar
             artifact "$buildDir/outputs/aar/library-release.aar"
+            artifact "$buildDir/libs/library-$versi-sources.jar"
             groupId group
             artifactId "bottomnavbarlib"
             version versi

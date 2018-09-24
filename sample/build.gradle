@@ -3,7 +3,7 @@ apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
 
 group = "com.subkhansarif.libs"
-def versi = "1.0.8"
+def versi = "1.1.2"
 version = versi
 
 android {
