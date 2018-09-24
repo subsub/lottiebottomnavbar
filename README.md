@@ -2,7 +2,7 @@
 
 A customisable bottom navigation bar with Lottie Animation
 
-## Current Latest Version `1.1.3`
+## Current Latest Version `1.1.4`
 
 
 # Usage

@@ -38,6 +38,7 @@ class LottieBottomNavbar : LinearLayout {
     private var viewPagerBackground: Int = Color.WHITE
     private var buttonColor: Int = Color.GRAY
     private var activeButtonColor: Int = Color.BLUE
+    private var navbarElevation: Float = 0f
 
 
     constructor(ctx: Context) : super(ctx)
@@ -76,6 +77,7 @@ class LottieBottomNavbar : LinearLayout {
     private fun getLayoutAtr(attrs: AttributeSet) {
         val a = context.obtainStyledAttributes(attrs, R.styleable.LottieBottomNavbar)
         val defaultButtonHeight = 56f * context.resources.displayMetrics.density
+        val defaultElevation = 15f * context.resources.displayMetrics.density
 
         itemCount = a.getInt(R.styleable.LottieBottomNavbar_itemCount, 1)
         buttonContainerBackgroundColor = a.getColor(R.styleable.LottieBottomNavbar_buttonContainerBackgroundColor, Color.WHITE)
@@ -85,10 +87,12 @@ class LottieBottomNavbar : LinearLayout {
         viewPagerBackground = a.getColor(R.styleable.LottieBottomNavbar_viewPagerBackground, Color.WHITE)
         buttonColor = a.getColor(R.styleable.LottieBottomNavbar_buttonColor, context.resources.getColor(R.color.colorGrey))
         activeButtonColor = a.getColor(R.styleable.LottieBottomNavbar_activeButtonColor, context.resources.getColor(R.color.colorLightBlue))
+        navbarElevation = a.getDimension(R.styleable.LottieBottomNavbar_navbarElevation, defaultElevation)
 
         a.recycle()
 
         weightSum = 1f
+        orientation = VERTICAL
     }
 
     private fun setupMenuItems() {
@@ -116,6 +120,7 @@ class LottieBottomNavbar : LinearLayout {
         navbarContainer?.layoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, buttonsHeight.toInt())
         navbarContainer?.setBackgroundColor(buttonContainerBackgroundColor)
         navbarContainer?.orientation = HORIZONTAL
+        navbarContainer?.elevation = navbarElevation
 
 
         // for each menu:

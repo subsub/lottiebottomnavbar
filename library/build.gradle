@@ -4,7 +4,7 @@ apply plugin: 'kotlin-android-extensions'
 apply plugin: 'maven-publish'
 
 group = "com.subkhansarif.libs"
-def versi = "1.1.3"
+def versi = "1.1.4"
 version = versi
 
 android {

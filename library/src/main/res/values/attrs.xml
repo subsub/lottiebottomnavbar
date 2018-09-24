@@ -9,5 +9,6 @@
         <attr name="viewPagerBackground" format="color" />
         <attr name="activeButtonColor" format="color" />
         <attr name="buttonColor" format="color" />
+        <attr name="navbarElevation" format="dimension"/>
     </declare-styleable>
 </resources>
