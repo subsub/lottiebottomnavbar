@@ -28,66 +28,20 @@ class MainActivity : AppCompatActivity(), IBottomClickListener {
         setContentView(R.layout.activity_main)
 
         setupBottomNavbar()
-
-        val pagerAdapter = MainFragmentPagerAdapter(supportFragmentManager)
-        main_view_pager.adapter = pagerAdapter
-        main_view_pager.offscreenPageLimit = 4
-        main_view_pager.addOnPageChangeListener(object : ViewPager.OnPageChangeListener{
-            override fun onPageScrollStateChanged(p0: Int) {
-
-            }
-
-            override fun onPageScrolled(p0: Int, p1: Float, p2: Int) {
-
-            }
-
-            override fun onPageSelected(p0: Int) {
-                bottom_navbar.setSelected(p0)
-            }
-        })
-
-        if (savedInstanceState == null) {
-            selectPage(1)
-        }
     }
 
     private fun setupBottomNavbar() {
         // create menu
-        menu.add(BottomMenu(MENU_PERSON, getString(R.string.lbl_menu_profile), R.drawable.ic_person_grey, "a_cup_of_coffee.json"))
-        menu.add(BottomMenu(MENU_PETS, getString(R.string.lbl_menu_pet), R.drawable.ic_pets_grey, "a_cup_of_coffee.json"))
-        menu.add(BottomMenu(MENU_RESTAURANT, getString(R.string.lbl_menu_Food), R.drawable.ic_restaurant_menu_grey, null))
+        menu.add(BottomMenu(MENU_PERSON, ProfileFragment(), getString(R.string.lbl_menu_profile), R.drawable.ic_person_grey, "a_cup_of_coffee.json"))
+        menu.add(BottomMenu(MENU_PETS, PetFragment(), getString(R.string.lbl_menu_pet), R.drawable.ic_pets_grey, "a_cup_of_coffee.json"))
+        menu.add(BottomMenu(MENU_RESTAURANT, FoodFragment(), getString(R.string.lbl_menu_Food), R.drawable.ic_restaurant_menu_grey, null))
 
-        bottom_navbar.setSelected(1)
+        bottom_navbar.setFragmentManager(supportFragmentManager)
         bottom_navbar.setMenu(menu)
+        bottom_navbar.setSelected(1)
         bottom_navbar.setMenuClickListener(this)
     }
 
-    private fun selectPage(page: Int) {
-        main_view_pager.currentItem = page
-    }
-
     override fun menuClicked(position: Int, id: Long) {
-        selectPage(position)
-    }
-}
-
-class MainFragmentPagerAdapter(fm: FragmentManager) : FragmentStatePagerAdapter(fm) {
-
-    override fun getItem(position: Int): Fragment {
-        return when (position) {
-            1 -> {
-                ProfileFragment()
-            }
-            2 -> {
-                PetFragment()
-            }
-            else -> {
-                FoodFragment()
-            }
-        }
-    }
-
-    override fun getCount(): Int {
-        return 3
     }
 }

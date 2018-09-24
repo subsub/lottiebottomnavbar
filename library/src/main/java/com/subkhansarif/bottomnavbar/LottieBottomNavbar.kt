@@ -1,8 +1,13 @@
 package com.subkhansarif.bottomnavbar
 
 import android.content.Context
+import android.graphics.Color
 import android.graphics.PorterDuff
 import android.os.Handler
+import android.support.v4.app.Fragment
+import android.support.v4.app.FragmentManager
+import android.support.v4.app.FragmentStatePagerAdapter
+import android.support.v4.view.ViewPager
 import android.util.AttributeSet
 import android.util.TypedValue
 import android.view.Gravity
@@ -21,17 +26,27 @@ class LottieBottomNavbar : LinearLayout {
     private var titleList: MutableList<TextView> = ArrayList()
     private var containerList: MutableList<LinearLayout> = ArrayList()
     private var itemCount: Int = 1
+    private var buttonContainerBackgroundColor: Int = Color.WHITE
+    private var buttonsHeight: Float = 56f
     private var selectedItem: Int = 0
     private var containerWidth: Int = 0
+    private var viewPager: UnswipeableViewPager? = null
+    private var navbarContainer: LinearLayout? = null
+    private var fragmentManager: FragmentManager? = null
+    private var offscreenPageLimit: Int = 1
+    private var enableViewPagerSwipe: Boolean = true
+    private var viewPagerBackground: Int = Color.WHITE
+    private var buttonColor: Int = Color.GRAY
+    private var activeButtonColor: Int = Color.BLUE
 
 
     constructor(ctx: Context) : super(ctx)
     constructor(ctx: Context, attrs: AttributeSet) : super(ctx, attrs) {
-        getItemCount(attrs)
+        getLayoutAtr(attrs)
     }
 
     constructor(ctx: Context, attrs: AttributeSet, defStyle: Int) : super(ctx, attrs, defStyle) {
-        getItemCount(attrs)
+        getLayoutAtr(attrs)
     }
 
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
@@ -58,10 +73,22 @@ class LottieBottomNavbar : LinearLayout {
         invalidate()
     }
 
-    private fun getItemCount(attrs: AttributeSet) {
+    private fun getLayoutAtr(attrs: AttributeSet) {
         val a = context.obtainStyledAttributes(attrs, R.styleable.LottieBottomNavbar)
+        val defaultButtonHeight = 56f * context.resources.displayMetrics.density
+
         itemCount = a.getInt(R.styleable.LottieBottomNavbar_itemCount, 1)
+        buttonContainerBackgroundColor = a.getColor(R.styleable.LottieBottomNavbar_buttonContainerBackgroundColor, Color.WHITE)
+        buttonsHeight = a.getDimension(R.styleable.LottieBottomNavbar_buttonsHeight, defaultButtonHeight)
+        offscreenPageLimit = a.getInt(R.styleable.LottieBottomNavbar_offscreenPageLimit, 1)
+        enableViewPagerSwipe = a.getBoolean(R.styleable.LottieBottomNavbar_setViewPagerSwipeable, true)
+        viewPagerBackground = a.getColor(R.styleable.LottieBottomNavbar_viewPagerBackground, Color.WHITE)
+        buttonColor = a.getColor(R.styleable.LottieBottomNavbar_buttonColor, context.resources.getColor(R.color.colorGrey))
+        activeButtonColor = a.getColor(R.styleable.LottieBottomNavbar_activeButtonColor, context.resources.getColor(R.color.colorLightBlue))
+
         a.recycle()
+
+        weightSum = 1f
     }
 
     private fun setupMenuItems() {
@@ -80,6 +107,15 @@ class LottieBottomNavbar : LinearLayout {
         val llLayoutParam = LinearLayout.LayoutParams(itemWidth, LinearLayout.LayoutParams.MATCH_PARENT)
         val imgLayoutParam = LinearLayout.LayoutParams(iconDimen, iconDimen)
         val txtLayoutParam = LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT)
+
+
+        setupViewPager()
+
+        // create Button Container
+        navbarContainer = LinearLayout(context)
+        navbarContainer?.layoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, buttonsHeight.toInt())
+        navbarContainer?.setBackgroundColor(buttonContainerBackgroundColor)
+        navbarContainer?.orientation = HORIZONTAL
 
 
         // for each menu:
@@ -103,14 +139,15 @@ class LottieBottomNavbar : LinearLayout {
                 if (!bottomMenu.animName.isNullOrBlank()) {
                     icon.setAnimation(bottomMenu.animName)
                     icon.repeatCount = 0
+                    icon.setColorFilter(activeButtonColor, PorterDuff.Mode.SRC_ATOP)
                     icon.playAnimation()
                 } else {
                     icon.setImageDrawable(context.resources.getDrawable(bottomMenu.icon))
-                    icon.setColorFilter(context.resources.getColor(R.color.colorLightBlue), PorterDuff.Mode.SRC_ATOP)
+                    icon.setColorFilter(activeButtonColor, PorterDuff.Mode.SRC_ATOP)
                 }
             } else {
                 icon.setImageDrawable(context.resources.getDrawable(bottomMenu.icon))
-                icon.setColorFilter(context.resources.getColor(R.color.colorGrey), PorterDuff.Mode.SRC_ATOP)
+                icon.setColorFilter(buttonColor, PorterDuff.Mode.SRC_ATOP)
             }
             iconList.add(index, icon)
             buttonContainer.addView(icon)
@@ -122,9 +159,9 @@ class LottieBottomNavbar : LinearLayout {
             title.text = bottomMenu.title
             title.textSize = textSize
             if (selectedItem == index) {
-                title.setTextColor(context.resources.getColor(R.color.colorLightBlue))
+                title.setTextColor(activeButtonColor)
             } else {
-                title.setTextColor(context.resources.getColor(R.color.colorGrey))
+                title.setTextColor(buttonColor)
             }
             titleList.add(index, title)
             buttonContainer.addView(title)
@@ -132,12 +169,43 @@ class LottieBottomNavbar : LinearLayout {
 
             // add click listener
             buttonContainer.setOnClickListener {
-                handleItemClicked(index, bottomMenu)
+                setSelected(index)
             }
 
 
             // add view to container
-            addView(buttonContainer)
+            navbarContainer?.addView(buttonContainer)
+        }
+
+        addView(viewPager)
+        addView(navbarContainer)
+    }
+
+    private fun setupViewPager() {
+        // Create ViewPager Layout
+        if (viewPager == null) {
+            viewPager = UnswipeableViewPager(context)
+            viewPager?.enableSwipe(enableViewPagerSwipe)
+            viewPager?.id = R.id.main_view_pager
+            viewPager?.layoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, 0, 1.0f)
+            viewPager?.addOnPageChangeListener(object : ViewPager.OnPageChangeListener{
+                override fun onPageScrollStateChanged(p0: Int) {
+
+                }
+
+                override fun onPageScrolled(p0: Int, p1: Float, p2: Int) {
+
+                }
+
+                override fun onPageSelected(p0: Int) {
+                    setSelected(p0)
+                }
+            })
+            viewPager?.setBackgroundColor(viewPagerBackground)
+        }
+        if (fragmentManager != null) {
+            viewPager?.adapter = MainFragmentPagerAdapter(fragmentManager!!, menu.map { it.fragment })
+            viewPager?.offscreenPageLimit = offscreenPageLimit
         }
     }
 
@@ -153,8 +221,8 @@ class LottieBottomNavbar : LinearLayout {
     private fun changeColor(newPosition: Int) {
         // change previously selected item color
         iconList[selectedItem].setImageDrawable(context.resources.getDrawable(menu[selectedItem].icon))
-        iconList[selectedItem].setColorFilter(context.resources.getColor(R.color.colorGrey), PorterDuff.Mode.SRC_ATOP)
-        titleList[selectedItem].setTextColor(context.resources.getColor(R.color.colorGrey))
+        iconList[selectedItem].setColorFilter(buttonColor, PorterDuff.Mode.SRC_ATOP)
+        titleList[selectedItem].setTextColor(buttonColor)
         iconList[selectedItem].invalidate()
         titleList[selectedItem].invalidate()
 
@@ -163,12 +231,13 @@ class LottieBottomNavbar : LinearLayout {
         if (!menu[newPosition].animName.isNullOrBlank()) {
             iconList[newPosition].setAnimation(menu[newPosition].animName)
             iconList[newPosition].repeatCount = 0
+            iconList[newPosition].setColorFilter(activeButtonColor, PorterDuff.Mode.SRC_ATOP)
             iconList[newPosition].playAnimation()
         } else {
-            iconList[newPosition].setColorFilter(context.resources.getColor(R.color.colorLightBlue), PorterDuff.Mode.SRC_ATOP)
+            iconList[newPosition].setColorFilter(activeButtonColor, PorterDuff.Mode.SRC_ATOP)
         }
 
-        titleList[newPosition].setTextColor(context.resources.getColor(R.color.colorLightBlue))
+        titleList[newPosition].setTextColor(activeButtonColor)
         iconList[newPosition].invalidate()
         titleList[newPosition].invalidate()
 
@@ -180,6 +249,7 @@ class LottieBottomNavbar : LinearLayout {
             handleItemClicked(position, menu[position])
         }
         selectedItem = position
+        viewPager?.currentItem = selectedItem
     }
 
     fun setMenu(menu: List<BottomMenu>) {
@@ -193,12 +263,35 @@ class LottieBottomNavbar : LinearLayout {
         invalidate()
     }
 
+    fun setFragmentManager(fm: FragmentManager) {
+        fragmentManager = fm
+    }
+
     fun setMenuClickListener(listener: IBottomClickListener) {
         this.listener = listener
     }
 }
 
-data class BottomMenu(val id: Long, val title: String, val icon: Int, val animName: String?)
+class MainFragmentPagerAdapter(fm: FragmentManager, fragments: List<Fragment>) : FragmentStatePagerAdapter(fm) {
+
+    private val fragments: MutableList<Fragment> = fragments.toMutableList()
+
+
+    fun updateFragments(newFragments: List<Fragment>) {
+        fragments.clear()
+        fragments.addAll(newFragments)
+    }
+
+    override fun getItem(position: Int): Fragment {
+        return fragments[position]
+    }
+
+    override fun getCount(): Int {
+        return fragments.size
+    }
+}
+
+data class BottomMenu(val id: Long, val fragment: Fragment, val title: String, val icon: Int, val animName: String?)
 interface IBottomClickListener {
     fun menuClicked(position: Int, id: Long)
 }
