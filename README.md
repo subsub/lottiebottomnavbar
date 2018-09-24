@@ -4,6 +4,7 @@ A customisable bottom navigation bar with Lottie Animation
 
 ## Current Latest Version `1.1.4`
 
+![](demo.gif)
 
 # Usage
 
