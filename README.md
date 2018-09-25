@@ -62,6 +62,7 @@ See sample project.
         app:layout_constraintTop_toTopOf="parent"
         app:offscreenPageLimit="4"
         app:setViewPagerSwipeable="false"
+	app:navbarElevation="15dp"
         app:viewPagerBackground="@color/colorWhite" />
 ```
 
@@ -99,3 +100,4 @@ Name | Type | Description
 `viewPagerBackground` | Color | The background color of the viewpager
 `activeButtonColor` | Color | Color for the selected button, this affect text and image tint, but won't affect to Lottie animation image color.
 `buttonColor` | Color | Default color for when button is not selected
+`navbarElevation` | Dimension | Elevation for navigation bar
