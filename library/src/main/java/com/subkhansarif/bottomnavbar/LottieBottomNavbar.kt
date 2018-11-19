@@ -3,6 +3,7 @@ package com.subkhansarif.bottomnavbar
 import android.content.Context
 import android.graphics.Color
 import android.graphics.PorterDuff
+import android.os.Build
 import android.os.Handler
 import android.support.v4.app.Fragment
 import android.support.v4.app.FragmentManager
@@ -120,7 +121,9 @@ class LottieBottomNavbar : LinearLayout {
         navbarContainer?.layoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, buttonsHeight.toInt())
         navbarContainer?.setBackgroundColor(buttonContainerBackgroundColor)
         navbarContainer?.orientation = HORIZONTAL
-        navbarContainer?.elevation = navbarElevation
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            navbarContainer?.elevation = navbarElevation
+        }
 
 
         // for each menu:
@@ -193,7 +196,7 @@ class LottieBottomNavbar : LinearLayout {
             viewPager?.enableSwipe(enableViewPagerSwipe)
             viewPager?.id = R.id.main_view_pager
             viewPager?.layoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, 0, 1.0f)
-            viewPager?.addOnPageChangeListener(object : ViewPager.OnPageChangeListener{
+            viewPager?.addOnPageChangeListener(object : ViewPager.OnPageChangeListener {
                 override fun onPageScrollStateChanged(p0: Int) {
 
                 }

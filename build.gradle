@@ -31,7 +31,7 @@ apply plugin: 'com.jfrog.bintray'
 apply plugin: 'java-library'
 
 group = "com.subkhansarif.libs"
-def versi = "1.1.4"
+def versi = "1.1.6"
 version = versi
 
 bintray {
