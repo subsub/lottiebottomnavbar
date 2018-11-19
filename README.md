@@ -2,7 +2,9 @@
 
 A customisable bottom navigation bar with Lottie Animation
 
-## Current Latest Version `1.1.4`
+## Current Latest Version `1.1.6`
+What's new:
+- Update Gradle minsdk version to support sdk v19
 
 ![](demo.gif)
 
