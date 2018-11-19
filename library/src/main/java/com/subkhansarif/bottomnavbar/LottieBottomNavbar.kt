@@ -3,8 +3,10 @@ package com.subkhansarif.bottomnavbar
 import android.content.Context
 import android.graphics.Color
 import android.graphics.PorterDuff
+import android.graphics.drawable.RippleDrawable
 import android.os.Build
 import android.os.Handler
+import android.support.annotation.DrawableRes
 import android.support.v4.app.Fragment
 import android.support.v4.app.FragmentManager
 import android.support.v4.app.FragmentStatePagerAdapter
@@ -40,6 +42,7 @@ class LottieBottomNavbar : LinearLayout {
     private var buttonColor: Int = Color.GRAY
     private var activeButtonColor: Int = Color.BLUE
     private var navbarElevation: Float = 0f
+    private var drawableRippleBackground: Int = -1
 
 
     constructor(ctx: Context) : super(ctx)
@@ -135,7 +138,7 @@ class LottieBottomNavbar : LinearLayout {
             buttonContainer.layoutParams = llLayoutParam
             buttonContainer.orientation = LinearLayout.VERTICAL
             buttonContainer.gravity = Gravity.CENTER
-            buttonContainer.background = context.resources.getDrawable(R.drawable.bg_menu_navbar)
+            buttonContainer.background = context.resources.getDrawable(if (drawableRippleBackground < 0) R.drawable.bg_menu_navbar else drawableRippleBackground)
             containerList.add(index, buttonContainer)
 
 
@@ -250,6 +253,14 @@ class LottieBottomNavbar : LinearLayout {
         titleList[newPosition].invalidate()
 
         selectedItem = newPosition
+    }
+
+    fun setRippleDrawable(rippleDrawable: Int) {
+        this.drawableRippleBackground = rippleDrawable
+        containerList.onEach {
+            it.background = context.resources.getDrawable(if (drawableRippleBackground < 0) R.drawable.bg_menu_navbar else drawableRippleBackground)
+        }
+        invalidate()
     }
 
     fun setSelected(position: Int) {
