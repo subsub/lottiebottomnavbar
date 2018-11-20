@@ -143,7 +143,7 @@ class LottieBottomNavbar : LinearLayout {
             buttonContainer.layoutParams = llLayoutParam
             buttonContainer.orientation = LinearLayout.VERTICAL
             buttonContainer.gravity = Gravity.CENTER
-            buttonContainer.background = context.resources.getDrawable(if (drawableRippleBackground < 0) R.drawable.bg_menu_navbar else drawableRippleBackground)
+            buttonContainer.setBackgroundColor(Color.TRANSPARENT)
             containerList.add(index, buttonContainer)
 
 
@@ -207,7 +207,7 @@ class LottieBottomNavbar : LinearLayout {
         if (navbarPosition == NAVBAR_POSITION_BOTTOM) {
             addView(viewPager)
             addView(navbarContainer)
-        } else /*(navbarPosition == NAVBAR_POSITION_TOP)*/{
+        } else /*(navbarPosition == NAVBAR_POSITION_TOP)*/ {
             addView(navbarContainer)
             addView(viewPager)
         }
@@ -258,6 +258,15 @@ class LottieBottomNavbar : LinearLayout {
         iconList[selectedItem].invalidate()
         titleList[selectedItem].invalidate()
 
+        // change button container background
+        containerList.forEachIndexed { index, linearLayout ->
+            if (index == newPosition) {
+                linearLayout.background = context.resources.getDrawable(if (drawableRippleBackground < 0) R.drawable.bg_menu_navbar else drawableRippleBackground)
+            } else {
+                linearLayout.setBackgroundColor(Color.TRANSPARENT)
+            }
+        }
+
         // change currently selected item color
 
         if (!menu[newPosition].animName.isNullOrBlank()) {
@@ -286,6 +295,9 @@ class LottieBottomNavbar : LinearLayout {
 
     fun setSelected(position: Int) {
         if (menu.size > position) {
+            if (menu[position].overrideFragmentClick != null && menu[position].overrideFragmentClick!!.invoke()) {
+                return
+            }
             handleItemClicked(position, menu[position])
         }
         selectedItem = position
@@ -337,7 +349,7 @@ class MainFragmentPagerAdapter(fm: FragmentManager, fragments: List<Fragment>) :
     }
 }
 
-data class BottomMenu(val id: Long, val fragment: Fragment, val title: String, val icon: Int, val animName: String?)
+data class BottomMenu(val id: Long, val fragment: Fragment, val title: String, val icon: Int, val animName: String?, val overrideFragmentClick: (() -> Boolean)? = null)
 interface IBottomClickListener {
     fun menuClicked(position: Int, id: Long)
 }

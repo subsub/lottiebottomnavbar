@@ -19,6 +19,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:offscreenPageLimit="4"
+        app:buttonContainerBackgroundColor="@color/colorLightBlue"
         app:viewPagerBackground="@color/colorWhite" />
 
 </android.support.constraint.ConstraintLayout>
