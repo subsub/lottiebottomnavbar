@@ -39,6 +39,7 @@ class MainActivity : AppCompatActivity(), IBottomClickListener {
         bottom_navbar.setFragmentManager(supportFragmentManager)
         bottom_navbar.setMenu(menu)
         bottom_navbar.setSelected(1)
+        bottom_navbar.setNavbarPositionTop()
         bottom_navbar.setMenuClickListener(this)
     }
 

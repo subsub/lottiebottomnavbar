@@ -3,10 +3,8 @@ package com.subkhansarif.bottomnavbar
 import android.content.Context
 import android.graphics.Color
 import android.graphics.PorterDuff
-import android.graphics.drawable.RippleDrawable
 import android.os.Build
 import android.os.Handler
-import android.support.annotation.DrawableRes
 import android.support.v4.app.Fragment
 import android.support.v4.app.FragmentManager
 import android.support.v4.app.FragmentStatePagerAdapter
@@ -43,6 +41,13 @@ class LottieBottomNavbar : LinearLayout {
     private var activeButtonColor: Int = Color.BLUE
     private var navbarElevation: Float = 0f
     private var drawableRippleBackground: Int = -1
+    private var navbarPosition: Int = NAVBAR_POSITION_BOTTOM
+
+
+    companion object {
+        const val NAVBAR_POSITION_BOTTOM = 1
+        const val NAVBAR_POSITION_TOP = 2
+    }
 
 
     constructor(ctx: Context) : super(ctx)
@@ -188,8 +193,24 @@ class LottieBottomNavbar : LinearLayout {
             navbarContainer?.addView(buttonContainer)
         }
 
-        addView(viewPager)
-        addView(navbarContainer)
+
+        layoutContent()
+    }
+
+    private fun layoutContent() {
+        if (indexOfChild(viewPager) >= 0) {
+            removeView(viewPager)
+        }
+        if (indexOfChild(navbarContainer) >= 0) {
+            removeView(navbarContainer)
+        }
+        if (navbarPosition == NAVBAR_POSITION_BOTTOM) {
+            addView(viewPager)
+            addView(navbarContainer)
+        } else /*(navbarPosition == NAVBAR_POSITION_TOP)*/{
+            addView(navbarContainer)
+            addView(viewPager)
+        }
     }
 
     private fun setupViewPager() {
@@ -288,6 +309,12 @@ class LottieBottomNavbar : LinearLayout {
 
     fun setMenuClickListener(listener: IBottomClickListener) {
         this.listener = listener
+    }
+
+    fun setNavbarPositionTop() {
+        this.navbarPosition = NAVBAR_POSITION_TOP
+        layoutContent()
+        invalidate()
     }
 }
 
