@@ -2,9 +2,15 @@
 
 A customisable bottom navigation bar with Lottie Animation
 
-## Current Latest Version `1.1.6`
+## Current Latest Version `1.2.0`
 What's new:
+[1.2.0]
+- custom button background
+- add override button click handler to BottomMenu
+
+[1.1.6]
 - Update Gradle minsdk version to support sdk v19
+
 
 ![](demo.gif)
 
