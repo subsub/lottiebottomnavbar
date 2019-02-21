@@ -6,20 +6,25 @@
     android:layout_height="match_parent"
     tools:context="com.subkhansarif.sample.MainActivity">
 
+    <FrameLayout
+        android:id="@+id/fragmentContainer"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layout_constraintBottom_toTopOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
 
     <com.subkhansarif.bottomnavbar.LottieBottomNavbar
         android:id="@+id/bottom_navbar"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:elevation="15dp"
+        android:layout_height="wrap_content"
         android:orientation="vertical"
+        app:buttonContainerBackgroundColor="@color/colorLightBlue"
         app:buttonsHeight="56dp"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintBottom_toBottomOf="@+id/fragmentContainer"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
         app:offscreenPageLimit="4"
-        app:buttonContainerBackgroundColor="@color/colorLightBlue"
         app:viewPagerBackground="@color/colorWhite" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

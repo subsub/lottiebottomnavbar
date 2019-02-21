@@ -13,6 +13,9 @@ import kotlinx.android.synthetic.main.activity_main.*
 class MainActivity : AppCompatActivity(), IBottomClickListener {
 
     private var menu: MutableList<BottomMenu> = ArrayList()
+    private lateinit var profileFragment: ProfileFragment
+    private lateinit var petFragment: PetFragment
+    private lateinit var foodFragment: FoodFragment
 
     companion object {
         const val MENU_PERSON = 0L
@@ -24,20 +27,23 @@ class MainActivity : AppCompatActivity(), IBottomClickListener {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
+        profileFragment = ProfileFragment()
+        petFragment = PetFragment()
+        foodFragment = FoodFragment()
+
         setupBottomNavbar()
     }
 
     private fun setupBottomNavbar() {
         // create menu
-        menu.add(BottomMenu(MENU_PERSON, ProfileFragment(), getString(R.string.lbl_menu_profile), R.drawable.ic_person_grey, "a_cup_of_coffee.json"))
-        menu.add(BottomMenu(MENU_PETS, PetFragment(), getString(R.string.lbl_menu_pet), R.drawable.ic_pets_grey, "a_cup_of_coffee.json"))
-        menu.add(BottomMenu(MENU_RESTAURANT, FoodFragment(), getString(R.string.lbl_menu_Food), R.drawable.ic_restaurant_menu_grey, null) {
-            Toast.makeText(this, "Coming soon!", Toast.LENGTH_SHORT).show()
+        menu.add(BottomMenu(MENU_PERSON, getString(R.string.lbl_menu_profile), R.drawable.ic_person_grey, "a_cup_of_coffee.json"))
+        menu.add(BottomMenu(MENU_PETS, getString(R.string.lbl_menu_pet), R.drawable.ic_pets_grey, "a_cup_of_coffee.json"))
+        menu.add(BottomMenu(MENU_RESTAURANT, getString(R.string.lbl_menu_Food), R.drawable.ic_restaurant_menu_grey, null) {
+            Toast.makeText(this, "Custom action that override the 'menuClicked' method", Toast.LENGTH_SHORT).show()
             // return true to override button click
             true
         })
 
-        bottom_navbar.setFragmentManager(supportFragmentManager)
         bottom_navbar.setMenu(menu)
         bottom_navbar.setSelected(1)
         bottom_navbar.setNavbarPositionTop()
@@ -45,5 +51,13 @@ class MainActivity : AppCompatActivity(), IBottomClickListener {
     }
 
     override fun menuClicked(position: Int, id: Long) {
+        val transaction = supportFragmentManager.beginTransaction()
+        when (position) {
+            0 -> transaction.replace(R.id.fragmentContainer, profileFragment)
+            1 -> transaction.replace(R.id.fragmentContainer, petFragment)
+            2 -> transaction.replace(R.id.fragmentContainer, foodFragment)
+        }
+        transaction.commit()
+
     }
 }
