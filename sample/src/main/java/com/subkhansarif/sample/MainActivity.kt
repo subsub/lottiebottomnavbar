@@ -1,8 +1,8 @@
 package com.subkhansarif.sample
 
 import android.os.Bundle
-import android.support.v7.app.AppCompatActivity
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
 import com.subkhansarif.bottomnavbar.BottomMenu
 import com.subkhansarif.bottomnavbar.IBottomClickListener
 import com.subkhansarif.sample.fragments.FoodFragment
