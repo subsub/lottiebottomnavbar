@@ -10,6 +10,7 @@ import android.util.TypedValue
 import android.view.Gravity
 import android.widget.LinearLayout
 import android.widget.TextView
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentStatePagerAdapter
@@ -94,10 +95,9 @@ class LottieBottomNavbar : LinearLayout {
         offscreenPageLimit = a.getInt(R.styleable.LottieBottomNavbar_offscreenPageLimit, 1)
         enableViewPagerSwipe = a.getBoolean(R.styleable.LottieBottomNavbar_setViewPagerSwipeable, true)
         viewPagerBackground = a.getColor(R.styleable.LottieBottomNavbar_viewPagerBackground, Color.WHITE)
-        buttonColor = a.getColor(R.styleable.LottieBottomNavbar_buttonColor, context.resources.getColor(R.color.colorGrey))
-        activeButtonColor = a.getColor(R.styleable.LottieBottomNavbar_activeButtonColor, context.resources.getColor(R.color.colorLightBlue))
+        buttonColor = a.getColor(R.styleable.LottieBottomNavbar_buttonColor, ContextCompat.getColor(context,R.color.colorGrey))
+        activeButtonColor = a.getColor(R.styleable.LottieBottomNavbar_activeButtonColor, ContextCompat.getColor(context,R.color.colorLightBlue))
         navbarElevation = a.getDimension(R.styleable.LottieBottomNavbar_navbarElevation, defaultElevation)
-
         a.recycle()
 
         weightSum = 1f
@@ -158,11 +158,11 @@ class LottieBottomNavbar : LinearLayout {
                     icon.setColorFilter(activeButtonColor, PorterDuff.Mode.SRC_ATOP)
                     icon.playAnimation()
                 } else {
-                    icon.setImageDrawable(context.resources.getDrawable(bottomMenu.icon))
+                    icon.setImageDrawable(ContextCompat.getDrawable(context,bottomMenu.icon))
                     icon.setColorFilter(activeButtonColor, PorterDuff.Mode.SRC_ATOP)
                 }
             } else {
-                icon.setImageDrawable(context.resources.getDrawable(bottomMenu.icon))
+                icon.setImageDrawable(ContextCompat.getDrawable(context,bottomMenu.icon))
                 icon.setColorFilter(buttonColor, PorterDuff.Mode.SRC_ATOP)
             }
             iconList.add(index, icon)
@@ -252,7 +252,7 @@ class LottieBottomNavbar : LinearLayout {
 
     private fun changeColor(newPosition: Int) {
         // change previously selected item color
-        iconList[selectedItem].setImageDrawable(context.resources.getDrawable(menu[selectedItem].icon))
+        iconList[selectedItem].setImageDrawable(ContextCompat.getDrawable(context,menu[selectedItem].icon))
         iconList[selectedItem].setColorFilter(buttonColor, PorterDuff.Mode.SRC_ATOP)
         titleList[selectedItem].setTextColor(buttonColor)
         iconList[selectedItem].invalidate()
@@ -261,7 +261,7 @@ class LottieBottomNavbar : LinearLayout {
         // change button container background
         containerList.forEachIndexed { index, linearLayout ->
             if (index == newPosition) {
-                linearLayout.background = context.resources.getDrawable(if (drawableRippleBackground < 0) R.drawable.bg_menu_navbar else drawableRippleBackground)
+                linearLayout.background = ContextCompat.getDrawable(context,if (drawableRippleBackground < 0) R.drawable.bg_menu_navbar else drawableRippleBackground)
             } else {
                 linearLayout.setBackgroundColor(Color.TRANSPARENT)
             }
@@ -288,7 +288,7 @@ class LottieBottomNavbar : LinearLayout {
     fun setRippleDrawable(rippleDrawable: Int) {
         this.drawableRippleBackground = rippleDrawable
         containerList.onEach {
-            it.background = context.resources.getDrawable(if (drawableRippleBackground < 0) R.drawable.bg_menu_navbar else drawableRippleBackground)
+            it.background = ContextCompat.getDrawable(context,if (drawableRippleBackground < 0) R.drawable.bg_menu_navbar else drawableRippleBackground)
         }
         invalidate()
     }
