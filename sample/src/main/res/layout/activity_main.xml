@@ -19,12 +19,12 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        app:buttonContainerBackgroundColor="@color/colorLightBlue"
+        app:buttonContainerBackgroundColor="@color/colorWhite"
+        app:buttonColor="@color/colorGrey"
+        app:activeButtonColor="@color/colorAccent"
         app:buttonsHeight="56dp"
         app:layout_constraintBottom_toBottomOf="@+id/fragmentContainer"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:offscreenPageLimit="4"
-        app:viewPagerBackground="@color/colorWhite" />
+        app:layout_constraintStart_toStartOf="parent"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

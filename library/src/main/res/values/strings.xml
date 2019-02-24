@@ -1,7 +1,0 @@
-<resources>
-    <string name="app_name">BottomNavbarWithLottieLibrary</string>
-
-    <string name="lbl_menu_profile">Profile</string>
-    <string name="lbl_menu_pet">Pet</string>
-    <string name="lbl_menu_Food">Food</string>
-</resources>

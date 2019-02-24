@@ -3,7 +3,6 @@ package com.subkhansarif.bottomnavbar
 import android.content.Context
 import android.graphics.Color
 import android.graphics.PorterDuff
-import android.os.Build
 import android.os.Handler
 import android.util.AttributeSet
 import android.util.TypedValue
@@ -19,7 +18,6 @@ import com.airbnb.lottie.LottieAnimationView
  **/
 
 private const val DEFAULT_HEIGHT = 56f
-private const val DEFAULT_ELEVATION = 15f
 private const val DEFAULT_ICON_PADDING = 2
 private const val DEFAULT_ICON_SIZE = 24f
 private const val DEFAULT_TEXT_SIZE = 10f
@@ -36,12 +34,8 @@ class LottieBottomNavbar : LinearLayout {
     private var selectedItem: Int = 0
     private var containerWidth: Int = 0
     private var navbarContainer: LinearLayout? = null
-    private var offscreenPageLimit: Int = 1
-    private var enableViewPagerSwipe: Boolean = true
-    private var viewPagerBackground: Int = Color.WHITE
     private var buttonColor: Int = Color.GRAY
-    private var activeButtonColor: Int = Color.BLUE
-    private var navbarElevation: Float = DEFAULT_ELEVATION
+    private var activeButtonColor: Int = Color.TRANSPARENT
     private var drawableRippleBackground: Int = -1
 
     constructor(ctx: Context, attrs: AttributeSet) : super(ctx, attrs) {
@@ -78,21 +72,12 @@ class LottieBottomNavbar : LinearLayout {
     private fun getLayoutAtr(attrs: AttributeSet) {
         val a = context.obtainStyledAttributes(attrs, R.styleable.LottieBottomNavbar)
         val defaultButtonHeight = DEFAULT_HEIGHT * context.resources.displayMetrics.density
-        val defaultElevation = DEFAULT_ELEVATION * context.resources.displayMetrics.density
 
-        itemCount = a.getInt(R.styleable.LottieBottomNavbar_itemCount, 1)
         buttonContainerBackgroundColor = a.getColor(R.styleable.LottieBottomNavbar_buttonContainerBackgroundColor, Color.WHITE)
         buttonsHeight = a.getDimension(R.styleable.LottieBottomNavbar_buttonsHeight, defaultButtonHeight)
-        offscreenPageLimit = a.getInt(R.styleable.LottieBottomNavbar_offscreenPageLimit, 1)
-        enableViewPagerSwipe = a.getBoolean(R.styleable.LottieBottomNavbar_setViewPagerSwipeable, true)
-        viewPagerBackground = if (a.hasValue(R.styleable.LottieBottomNavbar_viewPagerBackground)) {
-            R.styleable.LottieBottomNavbar_viewPagerBackground
-        } else {
-            Color.WHITE
-        }
+
         buttonColor = a.getColor(R.styleable.LottieBottomNavbar_buttonColor, ContextCompat.getColor(context, R.color.colorGrey))
-        activeButtonColor = a.getColor(R.styleable.LottieBottomNavbar_activeButtonColor, ContextCompat.getColor(context, R.color.colorLightBlue))
-        navbarElevation = a.getDimension(R.styleable.LottieBottomNavbar_navbarElevation, defaultElevation)
+        activeButtonColor = a.getColor(R.styleable.LottieBottomNavbar_activeButtonColor, ContextCompat.getColor(context, R.color.transparent))
         a.recycle()
 
         weightSum = 1f
@@ -118,9 +103,6 @@ class LottieBottomNavbar : LinearLayout {
             it.layoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, buttonsHeight.toInt())
             it.setBackgroundColor(buttonContainerBackgroundColor)
             it.orientation = HORIZONTAL
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                it.elevation = navbarElevation
-            }
         }
 
 
