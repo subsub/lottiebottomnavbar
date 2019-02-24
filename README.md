@@ -1,32 +1,35 @@
+# Lottie Bottom Navbar
 
-# Lottie Navigation Bar
+A customisable bottom navigation bar with Lottie Animation
 
-This library is a fork of [subsub Lottie Bottom Navbar](https://github.com/subsub/lottiebottomnavbar) that I have modified to match my needs.
+## Current Latest Version `1.2.0`
+What's new:
 
-Any comments or change request are welcome. Please Star this project if you like it! :)
+[1.2.0]
+- custom button background
+- add override button click handler to BottomMenu
 
-## What is different in this forked version?
-  - Rewrote in Kotlin
- - Updated to AndroidX
- - Removed integration of the view pager from the library
- - Code cleaning
+[1.1.6]
+- Update Gradle minsdk version to support sdk v19
 
-### Current Latest Version is `1.0.0`
+
+
+![](demo.gif)
 
 # Usage
 
 ### Add maven url Inside **Project Level build.gradle**
 ```bash
 buildscript {
-   ...
+	...
     repositories {
-       ...
+    	...
         maven {
-              mavenCentral()
+            url  "https://dl.bintray.com/subsub/maven"
         }
     }
     dependencies {
-       ...
+    	...
     }
 }
 
@@ -34,9 +37,9 @@ buildscript {
 
 allprojects {
     repositories {
-       ...
+    	...
         maven {
-              mavenCentral()
+            url  "https://dl.bintray.com/subsub/maven"
         }
     }
 }
@@ -44,7 +47,7 @@ allprojects {
 
 ### Add dependency into your app build.gradle
 ```bash
-implementation "com.ysdc.libs:lottienavbarlib:{latestVersion}"
+implementation "com.subkhansarif.libs:bottomnavbarlib:{latestVersion}"
 ```
 
 # Sample
@@ -53,38 +56,46 @@ See sample project.
 
 ### Add LottieBottomNavbar to your layout
 ```xml
-<com.ysdc.bottomnavbar.LottieBottomNavbar
+<com.subkhansarif.bottomnavbar.LottieBottomNavbar
         android:id="@+id/bottom_navbar"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:elevation="15dp"
         android:orientation="vertical"
         app:activeButtonColor="@color/colorWhite"
         app:buttonColor="@color/colorAccent"
         app:buttonContainerBackgroundColor="@color/colorWhite"
-        app:buttonsHeight="56dp" />
+        app:buttonsHeight="56dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:offscreenPageLimit="4"
+        app:setViewPagerSwipeable="false"
+	app:navbarElevation="15dp"
+        app:viewPagerBackground="@color/colorWhite" />
 ```
 
 ### Setup menus for navbar
-```kotlin
-menu.add(BottomMenu(MENU_PERSON, getString(R.string.lbl_menu_profile), R.drawable.ic_person_grey, "a_cup_of_coffee.json"))
-menu.add(BottomMenu(MENU_PETS, getString(R.string.lbl_menu_pet), R.drawable.ic_pets_grey, "a_cup_of_coffee.json"))
-menu.add(BottomMenu(MENU_RESTAURANT, getString(R.string.lbl_menu_Food), R.drawable.ic_restaurant_menu_grey, null) {
-  Toast.makeText(this, "Custom action that override the 'menuClicked' method", Toast.LENGTH_SHORT).show()
-    // return true to override button click
-  true
-})
+```java
+ArrayList<BottomMenu> menu = ArrayList();
+menu.add(new BottomMenu(0L, new ProfileFragment(), getString(R.string.lbl_menu_profile), R.drawable.ic_person_grey, "a_cup_of_coffee.json"));
+menu.add(new BottomMenu(1L, new PetFragment(), getString(R.string.lbl_menu_pet), R.drawable.ic_pets_grey, "a_cup_of_coffee.json"));
+menu.add(new BottomMenu(2L, new FoodFragment(), getString(R.string.lbl_menu_Food), R.drawable.ic_restaurant_menu_grey, null));
 ```
 BottomMenu constructor parameters:
 - `id: Long`, id for your button
+- `fragment: Fragment`, fragment for this button
 - `label: String`, label for this button. This will be shown below button icon
 - `icon: drawable res`, image resource for this button
 - `(optional) lottie_animation: String`, a String of json file name for Lottie Animation.
 
 ### Add menus to navbar
-```kotlin
+```java
+LottieBottomNavbar bottom_navbar = findViewById(R.id.bottom_navbar)
+bottom_navbar.setFragmentManager(getSupportFragmentManager())
 bottom_navbar.setMenu(menu)
 bottom_navbar.setSelected(1)
-bottom_navbar.setNavbarPositionTop()
 bottom_navbar.setMenuClickListener(this)
 ```
 
@@ -93,7 +104,10 @@ Name | Type | Description
 --- | --- | ---
 `buttonContainerBackgroundColor` | Color | Navbar background color
 `buttonsHeight` | Dimension | Navbar Height
+`itemCount` | Int | How many buttons in the Navbar, this value will be overriden when `setMenu()` is called
+`offscreenPageLimit` | Int | Set how many hidden fragment will be keep in memory. This is the same as `ViewPager.OffscreenPageLimit()`.
+`setViewPagerSwipeable` | Boolean | If set to false, the viewpager will be un-swipeable
+`viewPagerBackground` | Color | The background color of the viewpager
 `activeButtonColor` | Color | Color for the selected button, this affect text and image tint, but won't affect to Lottie animation image color.
 `buttonColor` | Color | Default color for when button is not selected
-
-You will see in the sample that there is a ripple effect. You can reuse it as it is or change the color by simply declaring `rippleColor` in your colors.xml or call the `setRippleDrawable` on the bottombar.
+`navbarElevation` | Dimension | Elevation for navigation bar
