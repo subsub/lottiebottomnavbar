@@ -11,7 +11,6 @@ import android.view.Gravity
 import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.core.content.ContextCompat
-import androidx.viewpager.widget.ViewPager
 import com.airbnb.lottie.LottieAnimationView
 
 
@@ -22,7 +21,7 @@ import com.airbnb.lottie.LottieAnimationView
 private const val DEFAULT_HEIGHT = 56f
 private const val DEFAULT_ELEVATION = 15f
 private const val DEFAULT_ICON_PADDING = 2
-private const val DEFAULT_ICON_SIZE = 22f
+private const val DEFAULT_ICON_SIZE = 24f
 private const val DEFAULT_TEXT_SIZE = 10f
 
 class LottieBottomNavbar : LinearLayout {
@@ -36,7 +35,6 @@ class LottieBottomNavbar : LinearLayout {
     private var buttonsHeight: Float = DEFAULT_HEIGHT
     private var selectedItem: Int = 0
     private var containerWidth: Int = 0
-    private var viewPager: UnswipeableViewPager? = null
     private var navbarContainer: LinearLayout? = null
     private var offscreenPageLimit: Int = 1
     private var enableViewPagerSwipe: Boolean = true
@@ -45,13 +43,6 @@ class LottieBottomNavbar : LinearLayout {
     private var activeButtonColor: Int = Color.BLUE
     private var navbarElevation: Float = DEFAULT_ELEVATION
     private var drawableRippleBackground: Int = -1
-    private var navbarPosition: Int = NAVBAR_POSITION_BOTTOM
-
-
-    companion object {
-        const val NAVBAR_POSITION_BOTTOM = 1
-        const val NAVBAR_POSITION_TOP = 2
-    }
 
     constructor(ctx: Context, attrs: AttributeSet) : super(ctx, attrs) {
         getLayoutAtr(attrs)
@@ -109,7 +100,6 @@ class LottieBottomNavbar : LinearLayout {
     }
 
     private fun setupMenuItems() {
-
         // menu item width is equal: container width / size of menu item
         val itemWidth = containerWidth / itemCount
 
@@ -121,9 +111,6 @@ class LottieBottomNavbar : LinearLayout {
         val llLayoutParam = LinearLayout.LayoutParams(itemWidth, LinearLayout.LayoutParams.MATCH_PARENT)
         val imgLayoutParam = LinearLayout.LayoutParams(iconDimen, iconDimen)
         val txtLayoutParam = LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT)
-
-
-        setupViewPager()
 
         // create Button Container
         navbarContainer = LinearLayout(context)
@@ -154,16 +141,11 @@ class LottieBottomNavbar : LinearLayout {
             val icon = LottieAnimationView(context)
             icon.layoutParams = imgLayoutParam
             icon.setPadding(DEFAULT_ICON_PADDING, DEFAULT_ICON_PADDING, DEFAULT_ICON_PADDING, DEFAULT_ICON_PADDING)
-            if (selectedItem == index) {
-                if (!bottomMenu.animName.isNullOrBlank()) {
-                    icon.setAnimation(bottomMenu.animName)
-                    icon.repeatCount = 0
-                    icon.setColorFilter(activeButtonColor, PorterDuff.Mode.SRC_ATOP)
-                    icon.playAnimation()
-                } else {
-                    icon.setImageDrawable(ContextCompat.getDrawable(context, bottomMenu.icon))
-                    icon.setColorFilter(activeButtonColor, PorterDuff.Mode.SRC_ATOP)
-                }
+            if (selectedItem == index && !bottomMenu.animName.isNullOrBlank()) {
+                icon.setAnimation(bottomMenu.animName)
+                icon.repeatCount = 0
+                icon.setColorFilter(activeButtonColor, PorterDuff.Mode.SRC_ATOP)
+                icon.playAnimation()
             } else {
                 icon.setImageDrawable(ContextCompat.getDrawable(context, bottomMenu.icon))
                 icon.setColorFilter(buttonColor, PorterDuff.Mode.SRC_ATOP)
@@ -198,40 +180,9 @@ class LottieBottomNavbar : LinearLayout {
 
     private fun layoutContent() {
         when {
-            (indexOfChild(viewPager) >= 0) -> removeView(viewPager)
             (indexOfChild(navbarContainer) >= 0) -> removeView(navbarContainer)
         }
-        if (navbarPosition == NAVBAR_POSITION_BOTTOM) {
-            addView(viewPager)
-            addView(navbarContainer)
-        } else /*(navbarPosition == NAVBAR_POSITION_TOP)*/ {
-            addView(navbarContainer)
-            addView(viewPager)
-        }
-    }
-
-    private fun setupViewPager() {
-        // Create ViewPager Layout
-        if (viewPager == null) {
-            viewPager = UnswipeableViewPager(context)
-            viewPager!!.enableSwipe(enableViewPagerSwipe)
-            viewPager!!.id = R.id.main_view_pager
-            viewPager!!.layoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, 0, 1.0f)
-            viewPager!!.addOnPageChangeListener(object : ViewPager.OnPageChangeListener {
-                override fun onPageScrollStateChanged(p0: Int) {
-                    //Nothing to do
-                }
-
-                override fun onPageScrolled(p0: Int, p1: Float, p2: Int) {
-                    //Nothing to do
-                }
-
-                override fun onPageSelected(p0: Int) {
-                    setSelected(p0)
-                }
-            })
-            viewPager!!.setBackgroundColor(viewPagerBackground)
-        }
+        addView(navbarContainer)
     }
 
     private fun handleItemClicked(index: Int, bottomMenu: BottomMenu) {
@@ -293,7 +244,6 @@ class LottieBottomNavbar : LinearLayout {
             handleItemClicked(position, menu[position])
         }
         selectedItem = position
-        viewPager?.currentItem = selectedItem
     }
 
     fun setMenu(menu: List<BottomMenu>) {
@@ -312,7 +262,6 @@ class LottieBottomNavbar : LinearLayout {
     }
 
     fun setNavbarPositionTop() {
-        this.navbarPosition = NAVBAR_POSITION_TOP
         layoutContent()
         invalidate()
     }
