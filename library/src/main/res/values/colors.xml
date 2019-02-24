@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorLightBlue">#54c7eb</color>
+    <color name="transparent">@android:color/transparent</color>
     <color name="colorGrey">#bbbbbb</color>
     <color name="colorWhite">#ffffff</color>
+    <color name="rippleColor">#ff0000</color>
 </resources>
