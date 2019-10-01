@@ -79,9 +79,9 @@ See sample project.
 ### Setup menus for navbar
 ```java
 ArrayList<BottomMenu> menu = ArrayList();
-menu.add(new BottomMenu(0L, new ProfileFragment(), getString(R.string.lbl_menu_profile), R.drawable.ic_person_grey, "a_cup_of_coffee.json"));
-menu.add(new BottomMenu(1L, new PetFragment(), getString(R.string.lbl_menu_pet), R.drawable.ic_pets_grey, "a_cup_of_coffee.json"));
-menu.add(new BottomMenu(2L, new FoodFragment(), getString(R.string.lbl_menu_Food), R.drawable.ic_restaurant_menu_grey, null));
+menu.add(new BottomMenu(0L, getString(R.string.lbl_menu_profile), R.drawable.ic_person_grey, "a_cup_of_coffee.json"));
+menu.add(new BottomMenu(1L, getString(R.string.lbl_menu_pet), R.drawable.ic_pets_grey, "a_cup_of_coffee.json"));
+menu.add(new BottomMenu(2L, getString(R.string.lbl_menu_Food), R.drawable.ic_restaurant_menu_grey, null));
 ```
 BottomMenu constructor parameters:
 - `id: Long`, id for your button
