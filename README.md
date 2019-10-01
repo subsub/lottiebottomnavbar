@@ -99,6 +99,31 @@ bottom_navbar.setSelected(1)
 bottom_navbar.setMenuClickListener(this)
 ```
 
+### Handle on tab clicked to change fragment
+- Implement `IBottomClickListener` in the activity
+- And Override `menuClicked()` to handle fragment transaction
+```java
+@Override
+    public void menuClicked(int position, long id) {
+        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+        switch (position) {
+            case 1: {
+                transaction.replace(R.id.fragmentContainer, profileFragment);
+                break;
+            }
+            case 2: {
+                transaction.replace(R.id.fragmentContainer, petFragment);
+                break;
+            }
+            case 3: {
+                transaction.replace(R.id.fragmentContainer, foodFragment);
+                break;
+            }
+        }
+        transaction.commit();
+    }
+```
+
 ### Layout Properties
 Name | Type | Description
 --- | --- | ---
