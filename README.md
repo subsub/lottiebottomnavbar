@@ -1,3 +1,6 @@
+# 🚨⚠️ ABANDONED ⚠️🚨
+
+
 # Lottie Bottom Navbar
 
 A customisable bottom navigation bar with Lottie Animation
